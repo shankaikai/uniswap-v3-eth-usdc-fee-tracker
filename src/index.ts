@@ -1,20 +1,19 @@
-import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
-
-dotenv.config();
+import express from "express";
+import { config } from "./config";
+import { initalise } from "./lib/init";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-const port = process.env.PORT;
+initalise();
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
   res.send("Hello world");
 });
 
-app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
+app.listen(config.port, () => {
+  console.log(`[server]: Server is running at http://localhost:${config.port}`);
 });
