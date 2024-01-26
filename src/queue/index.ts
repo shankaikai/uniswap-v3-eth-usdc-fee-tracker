@@ -25,7 +25,7 @@ export async function startSubscriber(nc: NatsConnection) {
           await calculateTransactionFee(gasPrice, gasUsed, timeStamp);
         processedData.push({
           blockNumber,
-          timeStamp,
+          timeStamp: parseInt(timeStamp),
           hash,
           gasPrice,
           gasUsed,

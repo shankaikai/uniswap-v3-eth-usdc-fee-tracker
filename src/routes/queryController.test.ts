@@ -7,23 +7,6 @@ jest.mock("../db/utils", () => ({
 }));
 
 describe("queryController", () => {
-  it("should return 400 if txHash is not provided", async () => {
-    const mockReq = {
-      query: {},
-    } as unknown as Request;
-
-    const mockJsonFn = jest.fn();
-    const mockStatusFn = jest.fn().mockReturnValue({ json: mockJsonFn });
-    const mockRes = {
-      status: mockStatusFn,
-    } as unknown as Response;
-
-    await queryController(mockReq, mockRes);
-
-    expect(mockStatusFn).toHaveBeenCalledWith(400);
-    expect(mockJsonFn).toHaveBeenCalledWith({ msg: "txHash is required" });
-  });
-
   it("should return 200 if txHash is provided", async () => {
     const mockReq = {
       query: {

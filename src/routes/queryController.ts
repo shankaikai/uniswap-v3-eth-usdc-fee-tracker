@@ -2,16 +2,13 @@ import { Request, Response } from "express";
 import { getTransactionEvents } from "../db/utils";
 
 export async function queryController(req: Request, res: Response) {
-  const { txHash, startTime, endTime } = req.query;
-  if (!txHash) {
-    res.status(400).json({ msg: "txHash is required" });
-  } else {
-    const items = await getTransactionEvents(
-      txHash as string,
-      startTime as string,
-      endTime as string
-    );
-    console.log("Here");
-    res.status(200).json({ items });
-  }
+  const { txHash, startTime, endTime, cursor, pageSize } = req.query;
+  const items = await getTransactionEvents(
+    cursor as string,
+    pageSize ? parseInt(pageSize as string) : 50,
+    txHash as string,
+    startTime ? parseInt(startTime as string) : undefined,
+    endTime ? parseInt(endTime as string) : undefined
+  );
+  res.status(200).json({ items });
 }

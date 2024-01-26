@@ -4,6 +4,7 @@
 
 ```
 cp .env.example .env
+npm i
 ```
 
 `PORT` - Defines the port that the server will run on
@@ -12,7 +13,6 @@ cp .env.example .env
 To run in development mode:
 
 ```
-npm i
 npm run dev
 ```
 
@@ -23,14 +23,26 @@ npm run build
 npm run start
 ```
 
+To call the API:
+
+```
+curl localhost:3001/api
+```
+
+Swagger docs url:
+
+```
+localhost:3001/docs
+```
+
 ## References
 
 Referred to [this guide](https://medium.com/@it.ermias.asmare/setting-up-expressjs-and-typescript-cfbee581c678) to setup the inital Express.js boilerplate.
 
 For the style guide, I tried to follow [Google TypeScript Style Guide](https://google.github.io/styleguide/tsguide.html) as closely as possible.
 
-[Error handling best practices](https://stackify.com/node-js-error-handling/)
+For batch processing of token transfer events and adding them into the DB, I used [Nats Queue](https://github.com/nats-io/nats.js).
 
-[Simple unit testing for express](https://medium.com/@abel.osorio/simple-unit-testing-for-express-routes-using-dependency-injection-e0c0750a5527)
+To add docs I used [Swagger JS Docs](https://www.npmjs.com/package/swagger-jsdoc).
 
-[Nats Queue Docs](https://github.com/nats-io/nats.js)
+To ensure pagination scales, I used [cursor-based pagination](https://www.prisma.io/docs/orm/prisma-client/queries/pagination) instead of offset-based pagination. This would significantly improve performance.
