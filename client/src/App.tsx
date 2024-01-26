@@ -5,6 +5,7 @@ import { PaginationBar } from "./components/PaginationBar";
 import { QueryForm } from "./components/QueryForm";
 import { useState } from "react";
 import { ApiParamsType, ApiResponseType } from "./lib/types";
+import { Summary } from "./components/Summary";
 
 function App() {
   const [params, setParams] = useState<ApiParamsType>({ pageIndex: 0 });
@@ -51,6 +52,11 @@ function App() {
       <h1 className="text-4xl text-center font-medium">
         Uniswap V3 ETH/USDC Transaction Fee Tracker
       </h1>
+      <span>
+        Note: Values might change and not be as accurate as historical data is
+        still currently being pulled.
+      </span>
+      <Summary />
       <QueryForm params={params} setParams={setParams} callApi={callApi} />
       {isError && (
         <div className="h-64 flex items-center">

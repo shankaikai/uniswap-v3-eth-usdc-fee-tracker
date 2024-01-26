@@ -17,3 +17,9 @@ export type ApiResponseType = {
     transactionFeeInUSDT: number;
   }[];
 };
+
+export type SummaryResponseType = {
+  currentETHUSDTPrice: number;
+  totalTransactionFeeInETH: number;
+  totalTransactionFeeInUSDT: number;
+};
