@@ -1,60 +1,59 @@
-"use client";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "./ui/label";
+import { ApiParamsType } from "../lib/types";
 
-const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-});
-
-export function QueryForm() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: "",
-    },
-  });
-
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-  }
-
+export function QueryForm({
+  params,
+  setParams,
+  callApi,
+}: {
+  params: ApiParamsType;
+  setParams: (params: ApiParamsType) => void;
+  callApi: () => void;
+}) {
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="shadcn" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
+    <div className="w-1/2 flex flex-col gap-y-8">
+      <Label>
+        Transaction Hash (Optional)
+        <Input
+          placeholder="0x6f1...
+        "
+          className="mt-2"
+          value={params.txHash}
+          onChange={(e) => setParams({ ...params, txHash: e.target.value })}
         />
-        <Button type="submit">Submit</Button>
-      </form>
-    </Form>
+      </Label>
+      <Label>
+        Start Timestamp (Optional)
+        <Input
+          placeholder="1621467020"
+          className="mt-2"
+          value={params.startTime}
+          onChange={(e) => setParams({ ...params, startTime: e.target.value })}
+        />
+      </Label>
+      <Label>
+        End Timestamp (Optional)
+        <Input
+          placeholder="1621467020"
+          className="mt-2"
+          value={params.endTime}
+          onChange={(e) => setParams({ ...params, endTime: e.target.value })}
+        />
+      </Label>
+      <Label>
+        Page Size (Defaults to 50)
+        <Input
+          placeholder="50"
+          className="mt-2"
+          value={params.pageSize}
+          onChange={(e) => setParams({ ...params, pageSize: e.target.value })}
+        />
+      </Label>
+      <Button className="w-full" onClick={callApi}>
+        Query!
+      </Button>
+    </div>
   );
 }

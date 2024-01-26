@@ -47,7 +47,7 @@ export async function getETHUSDTPrice(timestamp: string | number) {
     {
       params: {
         symbol: "ETHUSDT",
-        interval: "1h",
+        interval: "1d",
         startTime: timestamp,
         limit: 1,
       },
