@@ -2,6 +2,8 @@
 
 ## Setup
 
+Make sure you have Node and Docker installed.
+
 First, run the following command add the required API keys to `.env`.
 
 ```
