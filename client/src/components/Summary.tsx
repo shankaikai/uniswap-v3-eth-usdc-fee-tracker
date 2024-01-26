@@ -19,7 +19,7 @@ export function Summary() {
       <h2 className="font-bold">Summary statistics</h2>
       {isLoading ? (
         <p>Loading...</p>
-      ) : (
+      ) : data ? (
         <>
           <p>Current ETH/USDT Price: {data?.currentETHUSDTPrice}</p>
           <p>
@@ -31,6 +31,8 @@ export function Summary() {
             {data?.totalTransactionFeeInETH.toFixed(2)}
           </p>
         </>
+      ) : (
+        <p>No data available yet.</p>
       )}
     </div>
   );
