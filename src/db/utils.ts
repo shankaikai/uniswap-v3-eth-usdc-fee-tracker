@@ -30,3 +30,19 @@ export async function getTransactionEvents(
     take: pageSize,
   });
 }
+
+export async function getTotalTransactionFeeInUSDT() {
+  return await db.transactionEvent.aggregate({
+    _sum: {
+      transactionFeeInUSDT: true,
+    },
+  });
+}
+
+export async function getTotalTransactionFeeInETH() {
+  return db.transactionEvent.aggregate({
+    _sum: {
+      transactionFeeInETH: true,
+    },
+  });
+}
