@@ -24,10 +24,23 @@ Lastly, run all the services
 docker-compose up
 ```
 
-Urls:
+### URLs
+
 `/` - React SPA
-`/api` - Main endpoint to query for token transfer events
+
+`/api` - Endpoint to query for token transfer events
+
+`/summary` - Endpoint to query for summary statistics
+
 `/docs` - Swagger docs
+
+## Test
+
+The test cases are written using the Jest framework.
+
+```
+npm run test
+```
 
 ## Project structure
 
@@ -38,6 +51,14 @@ The `client` folder contains the code for the React + Vite frontend. The templat
 
 ## Architecture
 
+The Express.js server is the main entrypoint of the application, and also serves the React static site. When the server is started, it runs 2 functions. One to start downloading the historical token transfer data in batches of 100 (number chosen via trial and error) and another to poll for new token transactions every minute. Once new events are found, they are pushed to a nats queue for processing. The transaction fee is calculated by finding the ETHUSDT price with the closest timestamp ahead of the token transfer event timestamp. Once the batch of 100 events are processed, they are saved in the MySQL DB via the Prisma ORM.
+
+## Limitations / Struggles
+
+- Due to the limited API params from Etherscan, I could only query for events using start and end block which would result in a lot of duplicate data being queried from the endpoint. The duplicates won't be added to the DB but reduces the efficiency of the historical data download process.
+- Being unfamiliar with nats queue, I wasn't sure if the way I implemented it was ideal and was not sure how to use more than 1 subscriber to speed up processing.
+- When using `docker-compose up`, I ran into issues where the server tried to migrate the DB schema but the MySQL container was not ready yet, thus causing the server to error. I solved this using the [wait script from ufoscout](https://github.com/ufoscout/docker-compose-wait).
+
 ## References
 
 Referred to [this guide](https://medium.com/@it.ermias.asmare/setting-up-expressjs-and-typescript-cfbee581c678) to setup the inital Express.js boilerplate.
@@ -47,5 +68,3 @@ For the style guide, I tried to follow [Google TypeScript Style Guide](https://g
 For batch processing of token transfer events and adding them into the DB, I used [Nats Queue](https://github.com/nats-io/nats.js).
 
 To add docs I used [Swagger JS Docs](https://www.npmjs.com/package/swagger-jsdoc).
-
-To ensure pagination scales, I used [cursor-based pagination](https://www.prisma.io/docs/orm/prisma-client/queries/pagination) instead of offset-based pagination. This would significantly improve performance.

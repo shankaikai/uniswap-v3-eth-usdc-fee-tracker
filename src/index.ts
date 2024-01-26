@@ -31,8 +31,10 @@ async function main() {
   logger.info("Starting batch processing job");
   startBatchProcessingJob(latestBlockNumber, nc, startBlock);
 
+  logger.info("Starting queue subscriber");
   startSubscriber(nc);
 
+  logger.info("Starting cron job to poll for new token events");
   startPollingForTokenEvents(nc, startBlock);
 
   const app = express();
