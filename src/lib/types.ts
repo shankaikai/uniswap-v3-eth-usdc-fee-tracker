@@ -106,3 +106,9 @@ export type EtherscanTokenTransferEventsByAddressResponse = {
     confirmations: string;
   }[];
 };
+
+export type QueryParams = {
+  txHash: string;
+  startTime: string;
+  endTime: string;
+};

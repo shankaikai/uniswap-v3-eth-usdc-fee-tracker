@@ -11,6 +11,7 @@ import {
 import { connect } from "nats";
 import { startPollingForTokenEvents } from "./crons";
 import { startSubscriber } from "./queue";
+import { router } from "./routes";
 
 async function main() {
   logger.info("Bootstrapping server...");
@@ -36,9 +37,7 @@ async function main() {
   app.use(cors());
   app.use(express.json());
 
-  app.get("/", async (req, res) => {
-    res.send("Hello world");
-  });
+  app.use("/api", router);
 
   app.listen(config.port, () => {
     console.log(
