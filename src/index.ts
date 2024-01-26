@@ -9,7 +9,9 @@ import {
 } from "./lib/utils";
 
 import { connect } from "nats";
+import swaggerUi from "swagger-ui-express";
 import { startPollingForTokenEvents } from "./crons";
+import { swaggerSpec } from "./docs";
 import { startSubscriber } from "./queue";
 import { router } from "./routes";
 
@@ -37,6 +39,7 @@ async function main() {
   app.use(cors());
   app.use(express.json());
 
+  app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
   app.use("/api", router);
 
   app.listen(config.port, () => {
