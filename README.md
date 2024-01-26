@@ -1,4 +1,4 @@
-# Tokka Labs Challenge
+# Uniswap V3 ETHUSDT Transaction Fee Tracker
 
 ## Setup
 
@@ -31,6 +31,8 @@ The `root` contains the code for the Express.js backend.
 The `prisma` folder contains the schema for [Prisma](https://www.prisma.io/) ORM.
 
 The `client` folder contains the code for the React + Vite frontend. The template was generated using `npx create-vite@latest` and the UI was build using [shadcn/ui](https://ui.shadcn.com/) with Tailwind.css.
+
+## Architecture
 
 ## References
 
