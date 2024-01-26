@@ -2,9 +2,13 @@
 
 ## Setup
 
-First, add the required API keys to `.env`.
+First, run the following command add the required API keys to `.env`.
 
-`PORT` - Defines the port that the server will run on
+```
+cp .env.example .env
+```
+
+`PORT` - Defines the port that the Express server will run on
 `ETHERSCAN_API_KEY` - API Key Token to access Etherscan API (Obtained from https://etherscan.io/myapikey)
 `ALCHEMY_API_KEY` - API Key Token to access Alchemy (Obtained from https://dashboard.alchemy.com/)
 

@@ -32,7 +32,9 @@ function App() {
   } = useMutation({
     mutationFn: async () => {
       const response = await axios.get<ApiResponseType>(
-        "http://localhost:3001/api",
+        `${
+          import.meta.env.MODE === "development" ? "http://localhost:3001" : ""
+        }/api`,
         {
           params: {
             pageIndex: params.pageIndex ? params.pageIndex : undefined,

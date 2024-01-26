@@ -7,7 +7,9 @@ export function Summary() {
     queryKey: ["summary"],
     queryFn: async () => {
       const response = await axios.get<SummaryResponseType>(
-        "http://localhost:3001/api/summary"
+        `${
+          import.meta.env.MODE === "development" ? "http://localhost:3001" : ""
+        }/api/summary`
       );
       return response.data;
     },
