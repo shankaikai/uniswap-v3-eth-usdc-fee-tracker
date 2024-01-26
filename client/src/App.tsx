@@ -54,7 +54,8 @@ function App() {
       </h1>
       <span>
         Note: Values might change and not be as accurate as historical data is
-        still currently being pulled.
+        still currently being pulled. Some fees might be 0 due to inaccurate
+        pulling of prices.
       </span>
       <Summary />
       <QueryForm params={params} setParams={setParams} callApi={callApi} />

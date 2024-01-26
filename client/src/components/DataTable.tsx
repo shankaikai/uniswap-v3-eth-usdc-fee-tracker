@@ -14,6 +14,7 @@ export function DataTable({ data }: { data: ApiResponseType["items"] }) {
       <TableHeader>
         <TableRow>
           <TableHead>Transaction Hash</TableHead>
+          <TableHead>Time Stamp</TableHead>
           <TableHead>Gas Used</TableHead>
           <TableHead>Gas Price (Wei)</TableHead>
           <TableHead>Transaction Fee In ETH</TableHead>
@@ -24,6 +25,7 @@ export function DataTable({ data }: { data: ApiResponseType["items"] }) {
         {data.map((row) => (
           <TableRow key={row.hash}>
             <TableCell className="font-medium">{row.hash}</TableCell>
+            <TableCell>{row.timeStamp}</TableCell>
             <TableCell>{row.gasUsed}</TableCell>
             <TableCell>{row.gasPrice}</TableCell>
             <TableCell>{row.transactionFeeInETH}</TableCell>
