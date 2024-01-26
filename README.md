@@ -32,3 +32,5 @@ For the style guide, I tried to follow [Google TypeScript Style Guide](https://g
 [Error handling best practices](https://stackify.com/node-js-error-handling/)
 
 [Simple unit testing for express](https://medium.com/@abel.osorio/simple-unit-testing-for-express-routes-using-dependency-injection-e0c0750a5527)
+
+[Nats Queue Docs](https://github.com/nats-io/nats.js)

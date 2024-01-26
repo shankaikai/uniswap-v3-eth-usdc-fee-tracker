@@ -1,12 +1,19 @@
 import axios from "axios";
 import { config } from "../config";
-import { UNISWAP_V3_ADDRESS } from "./constants";
+import {
+  BATCH_SIZE,
+  QUEUE_SUBJECT_NAME,
+  UNISWAP_V3_ADDRESS,
+} from "./constants";
 import { alchemyProvider } from "./providers";
 import {
   BinanceKlineResponse,
   EtherscanTokenTransferEventsByAddressResponse,
 } from "./types";
 import { logger } from "./logger";
+import { NatsConnection, StringCodec } from "nats";
+import { ethers } from "ethers";
+import { db } from "../db";
 
 /*
  * Get the latest ETH block number
@@ -16,9 +23,25 @@ export async function getLastestBlockNumber() {
 }
 
 /*
+ * Get the latest block in DB to start historical batch job from so that we don't have to re-fetch blocks that are already in the DB
+ */
+export async function getStartBlock() {
+  const latest = await db.transactionEvent.findMany({
+    orderBy: {
+      blockNumber: "desc",
+    },
+    take: 1,
+  });
+
+  if (!latest.length) return "0";
+
+  return latest[0].blockNumber;
+}
+
+/*
  * Get the closest ETH/USDT price at a given timestamp
  */
-export async function getETHUSDTPrice(timestamp: number) {
+export async function getETHUSDTPrice(timestamp: string | number) {
   const response = await axios.get<BinanceKlineResponse>(
     "https://api.binance.com/api/v3/klines",
     {
@@ -34,16 +57,16 @@ export async function getETHUSDTPrice(timestamp: number) {
   // The other fields besides closePrice are not needed
   const [, , , , closePrice, , , , , , , _] = response.data[0];
 
-  return closePrice;
+  return parseFloat(closePrice);
 }
 
 /*
  * Get a batch of historical token transfer events from Uniswap V3 at a given startblock and endblock
  */
 export async function getTokenTransferEventsFromEtherscan(
-  batchSize = 5000,
-  startblock: number,
-  endblock: number
+  batchSize: number,
+  startblock: string | number,
+  endblock: string | number
 ) {
   const response =
     await axios.get<EtherscanTokenTransferEventsByAddressResponse>(
@@ -65,26 +88,65 @@ export async function getTokenTransferEventsFromEtherscan(
   return response.data.result;
 }
 
-export async function startHistoricalBatchJob(
-  latestBlockNumber: number,
-  startBlock = 0
+/*
+ * This function will fetch all records from a given start block to the latest block and publish them to the NATS queue. An optional callback can be provided upon completion to update starting block number for live polling.
+ */
+export async function startBatchProcessingJob(
+  latestBlockNumber: number | string,
+  nc: NatsConnection,
+  startBlock?: number | string,
+  callback?: (blockNumber: string) => void
 ) {
-  const batchSize = 5000;
+  logger.info("Starting to fetch historical token transfer events");
+
   let continueFetching = true;
+  let lastPublishedBlockNumber = "";
+  const sc = StringCodec();
 
   while (continueFetching) {
     const batch = await getTokenTransferEventsFromEtherscan(
-      batchSize,
-      startBlock,
+      BATCH_SIZE,
+      startBlock ?? 0,
       latestBlockNumber
     );
-    logger.info(`Adding batch of ${batch.length} token transfer events to db`);
-    // TODO: Add batch to queue for processing and adding to DB
-    if (batch.length === batchSize) {
+
+    // Break if no more events to fetch
+    if (!batch.length) {
+      continueFetching = false;
+      break;
+    }
+
+    logger.info(`Publishing batch of ${batch.length} events`);
+    nc.publish(QUEUE_SUBJECT_NAME, sc.encode(JSON.stringify(batch)));
+
+    // Update last published block number (used in live polling)
+    lastPublishedBlockNumber = batch[batch.length - 1].blockNumber;
+
+    if (batch.length === BATCH_SIZE) {
       startBlock = parseInt(batch[batch.length - 1].blockNumber);
     } else {
       continueFetching = false;
     }
   }
+
   logger.info("Finished fetching historical token transfer events");
+  callback?.(lastPublishedBlockNumber);
+}
+
+/*
+ * Calculate transaction fee in USDT at a given timestamp
+ */
+export async function calculateTransactionFee(
+  gasPrice: string,
+  gasUsed: string,
+  timeStamp: string
+) {
+  const bigIntGasPrice = ethers.toBigInt(gasPrice);
+  const bigIntGasUsed = ethers.toBigInt(gasUsed);
+  const transactionFeeInETH = parseFloat(
+    ethers.formatEther(bigIntGasPrice * bigIntGasUsed)
+  );
+  const transactionFeeInUSDT =
+    transactionFeeInETH * (await getETHUSDTPrice(timeStamp));
+  return { transactionFeeInETH, transactionFeeInUSDT };
 }

@@ -12,6 +12,7 @@ function generateConfig() {
     port: process.env.PORT || 3001,
     etherScanApiKey: process.env.ETHERSCAN_API_KEY,
     alchemyApiKey: process.env.ALCHEMY_API_KEY,
+    natsPort: process.env.NATS_PORT || 4222,
   };
 }
 
