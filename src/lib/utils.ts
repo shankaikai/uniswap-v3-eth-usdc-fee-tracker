@@ -42,15 +42,27 @@ export async function getStartBlock() {
  * Get the closest ETH/USDT price at a given timestamp
  */
 export async function getETHUSDTPrice(timestamp: string | number) {
+  let params: {
+    symbol: string;
+    interval: string;
+    startTime?: string | number;
+    limit: number;
+  } = {
+    symbol: "ETHUSDT",
+    interval: "1h",
+    startTime: timestamp,
+    limit: 1,
+  };
+
+  if (timestamp === "latest") {
+    params.startTime = undefined;
+    params.interval = "1m";
+  }
+
   const response = await axios.get<BinanceKlineResponse>(
     "https://api.binance.com/api/v3/klines",
     {
-      params: {
-        symbol: "ETHUSDT",
-        interval: "1d",
-        startTime: timestamp,
-        limit: 1,
-      },
+      params,
     }
   );
 

@@ -32,17 +32,21 @@ export async function getTransactionEvents(
 }
 
 export async function getTotalTransactionFeeInUSDT() {
-  return await db.transactionEvent.aggregate({
-    _sum: {
-      transactionFeeInUSDT: true,
-    },
-  });
+  return (
+    await db.transactionEvent.aggregate({
+      _sum: {
+        transactionFeeInUSDT: true,
+      },
+    })
+  )._sum.transactionFeeInUSDT;
 }
 
 export async function getTotalTransactionFeeInETH() {
-  return db.transactionEvent.aggregate({
-    _sum: {
-      transactionFeeInETH: true,
-    },
-  });
+  return (
+    await db.transactionEvent.aggregate({
+      _sum: {
+        transactionFeeInETH: true,
+      },
+    })
+  )._sum.transactionFeeInETH;
 }

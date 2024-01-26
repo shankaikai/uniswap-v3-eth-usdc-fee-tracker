@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { queryController } from "./queryController";
+import { summaryController } from "./summaryController";
 
 export const router = Router();
 
@@ -48,3 +49,25 @@ export const router = Router();
  *                     $ref: '#/components/schemas/TransactionEvent'
  */
 router.get("/", queryController);
+
+/**
+ * @openapi
+ * /api/summary:
+ *   get:
+ *     summary: Get summary data
+ *     responses:
+ *       200:
+ *         description: The summary data of currently stored token transfer events
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 currentETHUSDTPrice:
+ *                   type: number
+ *                 totalTransactionFeeInETH:
+ *                   type: number
+ *                 totalTransactionFeeInUSDT:
+ *                   type: number
+ */
+router.get("/summary", summaryController);
