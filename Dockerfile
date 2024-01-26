@@ -1,16 +1,13 @@
 FROM node:18
 
-ENV NODE_ENV development
+ENV NODE_ENV production
 
 WORKDIR /server
 
+# Copy all the files since we have run setup beforehand
 COPY . .
 
-RUN npm install
-RUN npm run build
 RUN npx prisma generate
-
-RUN cd ./dist
 
 EXPOSE $PORT
 

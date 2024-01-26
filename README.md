@@ -2,29 +2,22 @@
 
 ## Setup
 
-First, run:
-
-```
-npm run setup
-```
-
-Next, add the required API keys to `.env`.
+First, add the required API keys to `.env`.
 
 `PORT` - Defines the port that the server will run on
 `ETHERSCAN_API_KEY` - API Key Token to access Etherscan API (Obtained from https://etherscan.io/myapikey)
 `ALCHEMY_API_KEY` - API Key Token to access Alchemy (Obtained from https://dashboard.alchemy.com/)
 
-To run the server in development mode:
+Then, run the next script to install all dependencies and create the builds:
 
 ```
-npm run dev
+npm run setup
 ```
 
-To build and run:
+Lastly, run all the services
 
 ```
-npm run build
-npm run start
+docker-compose up
 ```
 
 Urls:
