@@ -4,13 +4,16 @@ ENV NODE_ENV production
 
 WORKDIR /server
 
+COPY --from=ghcr.io/ufoscout/docker-compose-wait:latest /wait /wait
+
 # Copy all the files since we have run setup beforehand
 COPY . .
+
 RUN chmod +x migrate-and-start.sh
 
 RUN npx prisma generate
 
 EXPOSE $PORT
 
-# Push DB schema and then start the server
-CMD ./migrate-and-start.sh
+# Wait for MySQL server to be ready then start the server
+CMD /wait && ./migrate-and-start.sh

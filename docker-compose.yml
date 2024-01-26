@@ -26,5 +26,7 @@ services:
     depends_on:
       - db
       - nats
+    environment:
+      WAIT_HOSTS: db:3306
 volumes:
   tokka-db:
