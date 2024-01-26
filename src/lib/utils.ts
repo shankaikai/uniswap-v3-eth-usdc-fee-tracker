@@ -6,6 +6,7 @@ import {
   BinanceKlineResponse,
   EtherscanTokenTransferEventsByAddressResponse,
 } from "./types";
+import { logger } from "./logger";
 
 /*
  * Get the latest ETH block number
@@ -54,6 +55,7 @@ export async function getTokenTransferEventsFromEtherscan(
           address: UNISWAP_V3_ADDRESS,
           startblock,
           endblock,
+          page: 1,
           offset: batchSize,
           sort: "asc",
           apikey: config.etherScanApiKey,
@@ -61,4 +63,28 @@ export async function getTokenTransferEventsFromEtherscan(
       }
     );
   return response.data.result;
+}
+
+export async function startHistoricalBatchJob(
+  latestBlockNumber: number,
+  startBlock = 0
+) {
+  const batchSize = 5000;
+  let continueFetching = true;
+
+  while (continueFetching) {
+    const batch = await getTokenTransferEventsFromEtherscan(
+      batchSize,
+      startBlock,
+      latestBlockNumber
+    );
+    logger.info(`Adding batch of ${batch.length} token transfer events to db`);
+    // TODO: Add batch to queue for processing and adding to DB
+    if (batch.length === batchSize) {
+      startBlock = parseInt(batch[batch.length - 1].blockNumber);
+    } else {
+      continueFetching = false;
+    }
+  }
+  logger.info("Finished fetching historical token transfer events");
 }

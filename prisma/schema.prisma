@@ -11,9 +11,10 @@ datasource db {
 }
 
 model TransactionEvent {
-  hash String @id
-  timeStamp     Int
-  gasPrice      Int
-  gasUsed       Int
+  hash                 String @id
+  blockNumber          Int
+  timeStamp            Int
+  gasPrice             Int
+  gasUsed              Int
   transactionFeeInUSDT Float
 }
