@@ -5,7 +5,7 @@ export async function queryController(req: Request, res: Response) {
   const { txHash, startTime, endTime, cursor, pageSize } = req.query;
   const items = await getTransactionEvents(
     cursor as string,
-    pageSize ? parseInt(pageSize as string) : 50,
+    pageSize ? parseInt(pageSize as string) : undefined,
     txHash as string,
     startTime ? parseInt(startTime as string) : undefined,
     endTime ? parseInt(endTime as string) : undefined

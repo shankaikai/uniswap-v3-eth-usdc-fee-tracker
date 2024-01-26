@@ -19,7 +19,7 @@ async function main() {
   logger.info("Bootstrapping server...");
 
   logger.info("Starting nats queue...");
-  const nc = await connect({ servers: `nats://0.0.0.0:${config.natsPort}` });
+  const nc = await connect({ servers: `nats://nats:${config.natsPort}` });
   logger.info(`Connected to nats server at ${config.natsPort}`);
 
   const latestBlockNumber = await getLastestBlockNumber();

@@ -9,8 +9,8 @@ export async function insertTransactionEvents(data: TransactionEvent[]) {
  * Get transaction events from the DB with pagination and filtering
  */
 export async function getTransactionEvents(
-  cursor: string,
-  pageSize: number,
+  cursorHash?: string,
+  pageSize = 50,
   hash?: string,
   startTimeStamp?: number,
   endTimeStamp?: number
@@ -26,9 +26,11 @@ export async function getTransactionEvents(
         lte: endTimeStamp,
       },
     },
-    cursor: {
-      hash: cursor,
-    },
+    cursor: cursorHash
+      ? {
+          hash: cursorHash,
+        }
+      : undefined,
     skip: 1, // skip the cursor
     take: pageSize,
   });

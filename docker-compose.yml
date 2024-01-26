@@ -8,7 +8,7 @@ services:
       MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
     ports:
-      - "${MYSQL_PORT}:3306"
+      - "${MYSQL_PORT}:${MYSQL_PORT}"
     expose:
       - "${MYSQL_PORT}"
     volumes:
@@ -16,8 +16,15 @@ services:
   nats:
     image: nats:latest
     ports:
-      - "${NATS_PORT}:4222"
+      - "${NATS_PORT}:${NATS_PORT}"
     expose:
       - ${NATS_PORT}
+  server:
+    build: .
+    ports:
+      - "3001:3001"
+    depends_on:
+      - db
+      - nats
 volumes:
   tokka-db:
