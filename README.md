@@ -2,15 +2,19 @@
 
 ## Setup
 
+First, run:
+
 ```
-cp .env.example .env
-npm i
+npm run setup
 ```
+
+Next, add the required API keys to `.env`.
 
 `PORT` - Defines the port that the server will run on
 `ETHERSCAN_API_KEY` - API Key Token to access Etherscan API (Obtained from https://etherscan.io/myapikey)
+`ALCHEMY_API_KEY` - API Key Token to access Alchemy (Obtained from https://dashboard.alchemy.com/)
 
-To run in development mode:
+To run the server in development mode:
 
 ```
 npm run dev
@@ -23,17 +27,14 @@ npm run build
 npm run start
 ```
 
-To call the API:
+Urls:
+`/` - React SPA
+`/api` - Main endpoint to query for token transfer events
+`/docs` - Swagger docs
 
-```
-curl localhost:3001/api
-```
+## Project structure
 
-Swagger docs url:
-
-```
-localhost:3001/docs
-```
+The `client` folder contains the code for the React + Vite frontend. The template was generated using `npx create-vite@latest`
 
 ## References
 

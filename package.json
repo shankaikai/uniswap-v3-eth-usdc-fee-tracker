@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "setup": "cp .env.example .env && npm i && cd client && npm i && npm run build",
     "dev": "nodemon",
     "start": "npm run build && node dist/index.js",
     "build": "tsc",
