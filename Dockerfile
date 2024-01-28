@@ -4,9 +4,10 @@ ENV NODE_ENV development
 
 WORKDIR /server
 
+# Copy wait script
 COPY --from=ghcr.io/ufoscout/docker-compose-wait:latest /wait /wait
 
-# Copy all the files since we have run setup beforehand
+# Copy all the files from the project’s root to the working directory
 COPY . .
 
 RUN npm run setup
@@ -17,5 +18,5 @@ RUN npx prisma generate
 
 EXPOSE $PORT
 
-# Wait for MySQL server to be ready then start the server
+# Wait for MySQL and Nats server to be ready then start the server
 CMD /wait && ./migrate-and-start.sh
