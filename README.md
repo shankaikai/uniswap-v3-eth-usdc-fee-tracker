@@ -4,23 +4,16 @@
 
 Make sure you have Node and Docker installed.
 
-First, run the following command add the required API keys to `.env`.
+First, run the following command add the required API keys to `.env` file.
 
 ```
 cp .env.example .env
 ```
 
-`PORT` - Defines the port that the Express server will run on
 `ETHERSCAN_API_KEY` - API Key Token to access Etherscan API (Obtained from https://etherscan.io/myapikey)
 `ALCHEMY_API_KEY` - API Key Token to access Alchemy (Obtained from https://dashboard.alchemy.com/)
 
-Then, run the next script to install all dependencies and create the builds:
-
-```
-npm run setup
-```
-
-Lastly, run all the services
+Then, run all the services using the command:
 
 ```
 docker-compose up
